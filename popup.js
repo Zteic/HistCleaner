@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
   const searchView = document.getElementById("searchView");
-  const optionsView = document.getElementById("optionsView");
   const keywordInput = document.getElementById("keyword");
   const domainInput = document.getElementById("domain");
   const dateRangeInput = document.getElementById("dateRange");
@@ -21,14 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchButton = document.getElementById("search");
   const resetFiltersButton = document.getElementById("resetFilters");
   const deleteButton = document.getElementById("deleteSelected");
-  const openOptionsButton = document.getElementById("openOptions");
-  const backToSearchButton = document.getElementById("backToSearch");
-  const saveOptionsButton = document.getElementById("saveOptions");
-  const maxResultsInput = document.getElementById("maxResults");
-  const blacklistKeywordsInput = document.getElementById("blacklistKeywords");
-  const whitelistDomainsInput = document.getElementById("whitelistDomains");
-  const rulePresetsInput = document.getElementById("rulePresets");
-  const optionsStatus = document.getElementById("optionsStatus");
   const selectAllInput = document.getElementById("selectAll");
   const selectedCount = document.getElementById("selectedCount");
   const statusText = document.getElementById("status");
@@ -64,8 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let settings = {
     maxResults: 100,
     blacklistKeywords: [],
-    whitelistDomains: [],
-    rulePresets: [],
   };
 
   chrome.storage.local.get(["lastKeyword", "lastDomain", "settings"], (data) => {
@@ -107,9 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   searchButton.addEventListener("click", searchHistory);
   resetFiltersButton.addEventListener("click", resetFilters);
-  openOptionsButton.addEventListener("click", showOptions);
-  backToSearchButton.addEventListener("click", showSearch);
-  saveOptionsButton.addEventListener("click", saveOptions);
   autoDeleteToggleButton.addEventListener("click", () => toggleAutoDelete());
   dateRangeInput.addEventListener("change", toggleCustomDates);
   autoDeleteModeInput.addEventListener("change", toggleAutoDeleteTimerFields);
@@ -142,44 +128,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function applySettingsToInputs() {
-    maxResultsInput.value = settings.maxResults;
-    blacklistKeywordsInput.value = settings.blacklistKeywords.join("\n");
-    whitelistDomainsInput.value = settings.whitelistDomains.join("\n");
-    rulePresetsInput.value = settings.rulePresets.join("\n");
     toggleCustomDates();
     toggleAutoDeleteTimerFields();
-  }
-
-  function showOptions() {
-    searchView.hidden = true;
-    optionsView.hidden = false;
-    optionsStatus.textContent = "";
-    applySettingsToInputs();
-  }
-
-  function showSearch() {
-    optionsView.hidden = true;
-    searchView.hidden = false;
-  }
-
-  function saveOptions() {
-    settings = {
-      maxResults: Number(maxResultsInput.value) || 100,
-      blacklistKeywords: linesFromTextarea(blacklistKeywordsInput),
-      whitelistDomains: linesFromTextarea(whitelistDomainsInput).map((domain) => domain.toLowerCase()),
-      rulePresets: linesFromTextarea(rulePresetsInput),
-    };
-
-    chrome.storage.local.set({ settings }, () => {
-      optionsStatus.textContent = "Pengaturan disimpan.";
-    });
-  }
-
-  function linesFromTextarea(input) {
-    return input.value
-      .split("\n")
-      .map((value) => value.trim())
-      .filter(Boolean);
   }
 
   function toggleCustomDates() {

@@ -228,8 +228,8 @@ details > button,
   margin-top: 10px;
 }
 
-.button-row.three {
-  grid-template-columns: 1fr 1fr 1.4fr;
+.button-row.two {
+  grid-template-columns: 1fr 1.4fr;
 }
 
 .button-row .button-row {
@@ -541,7 +541,6 @@ details[open] summary::after {
 }
 
 #status,
-#optionsStatus,
 #downloadsStatus,
 #cookiesStatus,
 #activityStatus {

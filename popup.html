@@ -141,9 +141,8 @@
           <span id="selectedCount">0 dipilih</span>
         </div>
 
-        <div class="button-row three">
+        <div class="button-row two">
           <button id="resetFilters" class="btn-ghost" type="button">Reset</button>
-          <button id="openOptions" class="btn-ghost" type="button">Options</button>
           <button id="deleteSelected" type="button">Hapus Terpilih</button>
         </div>
 
@@ -204,29 +203,6 @@
         <div class="button-row">
           <button id="clearActivity" class="btn-ghost" type="button">Bersihkan Log</button>
         </div>
-      </section>
-
-      <section id="optionsView" class="view" hidden>
-        <h2>Options</h2>
-
-        <label for="maxResults">Maksimal hasil yang ditampilkan</label>
-        <input id="maxResults" type="number" min="10" max="1000" step="10">
-
-        <label for="blacklistKeywords">Blacklist keyword</label>
-        <textarea id="blacklistKeywords" rows="5" placeholder="Satu keyword per baris"></textarea>
-
-        <label for="whitelistDomains">Whitelist domain</label>
-        <textarea id="whitelistDomains" rows="5" placeholder="Satu domain per baris"></textarea>
-
-        <label for="rulePresets">Rule preset</label>
-        <textarea id="rulePresets" rows="6" placeholder="keyword | domain | today"></textarea>
-
-        <div class="button-row">
-          <button id="backToSearch" class="btn-ghost" type="button">Kembali</button>
-          <button id="saveOptions" type="button">Simpan</button>
-        </div>
-
-        <p id="optionsStatus"></p>
       </section>
     </main>
 
