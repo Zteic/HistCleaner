@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>History Cleaner Options</title>
+    <link rel="stylesheet" href="options.css">
+  </head>
+  <body>
+    <main>
+      <h1>Options</h1>
+
+      <label for="maxResults">Maksimal hasil yang ditampilkan</label>
+      <input id="maxResults" type="number" min="10" max="1000" step="10">
+
+      <label for="defaultDateRange">Filter tanggal default</label>
+      <select id="defaultDateRange">
+        <option value="all">Semua</option>
+        <option value="today">Hari ini</option>
+        <option value="7">7 hari</option>
+        <option value="30">30 hari</option>
+        <option value="custom">Custom</option>
+      </select>
+
+      <label for="blacklistKeywords">Blacklist keyword</label>
+      <textarea id="blacklistKeywords" rows="8" placeholder="Satu keyword per baris"></textarea>
+
+      <button id="save" type="button">Simpan</button>
+      <p id="status"></p>
+    </main>
+
+    <script src="options.js"></script>
+  </body>
+</html>

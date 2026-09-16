@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>History Cleaner</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main>
+      <header class="app-header">
+        <div class="brand">
+          <div class="brand-icon">H</div>
+          <div class="brand-text">
+            <h1>History Cleaner</h1>
+            <p>Cari dan hapus data browsing</p>
+          </div>
+        </div>
+        <button id="themeToggle" class="icon-btn" type="button" title="Ganti tema" aria-label="Ganti tema">
+          <svg id="iconDark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg id="iconLight" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden>
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+      </header>
+
+      <nav class="tabs">
+        <button class="tab active" data-view="searchView" type="button">History</button>
+        <button class="tab" data-view="downloadsView" type="button">Downloads</button>
+        <button class="tab" data-view="siteDataView" type="button">Site Data</button>
+        <button class="tab" data-view="activityView" type="button">Aktivitas</button>
+      </nav>
+
+      <section id="searchView" class="view">
+        <div class="card">
+          <label for="keyword">Kata kunci</label>
+          <div class="search-row">
+            <input id="keyword" type="text" placeholder="contoh: youtube">
+            <button id="search">Cari</button>
+          </div>
+
+          <label for="domain">Domain</label>
+          <input id="domain" type="text" placeholder="contoh: youtube.com">
+
+          <div class="grid-row">
+            <div>
+              <label for="dateRange">Tanggal</label>
+              <select id="dateRange">
+                <option value="all">Semua</option>
+                <option value="today">Hari ini</option>
+                <option value="7">7 hari</option>
+                <option value="30">30 hari</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+            <div>
+              <label for="sortOrder">Urutan</label>
+              <select id="sortOrder">
+                <option value="newest">Terbaru</option>
+                <option value="oldest">Terlama</option>
+                <option value="domain">Domain</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="customDates" class="date-grid" hidden>
+            <input id="startDate" type="date">
+            <input id="endDate" type="date">
+          </div>
+        </div>
+
+        <details>
+          <summary>Advanced</summary>
+
+          <div class="adv-group">
+            <p class="adv-title">Pencarian</p>
+
+            <label for="matchMode">Cari di</label>
+            <select id="matchMode">
+              <option value="both">Title dan URL</option>
+              <option value="title">Title saja</option>
+              <option value="url">URL saja</option>
+            </select>
+
+            <label title="Gunakan pola pencarian regex, bukan teks biasa.">
+              <input id="regexMode" type="checkbox">
+              Regex keyword <span class="info">i</span>
+            </label>
+
+            <label title="Tampilkan URL yang muncul lebih dari satu kali.">
+              <input id="duplicatesOnly" type="checkbox">
+              Duplicate cleaner <span class="info">i</span>
+            </label>
+          </div>
+
+          <div class="adv-group">
+            <p class="adv-title">Penghapusan</p>
+
+            <label title="Hanya menghitung hasil. Semua penghapusan otomatis dinonaktifkan.">
+              <input id="dryRunMode" type="checkbox">
+              Dry run <span class="info">i</span>
+            </label>
+
+            <label for="autoDeleteMode">Mode hapus otomatis</label>
+            <select id="autoDeleteMode">
+              <option value="timer">Setelah waktu tertentu</option>
+              <option value="tabClose">Setelah tab ditutup</option>
+            </select>
+
+            <div id="autoDeleteTimerFields" class="grid-row">
+              <input id="autoDeleteValue" type="number" min="1" placeholder="Waktu">
+              <select id="autoDeleteUnit">
+                <option value="seconds">Detik</option>
+                <option value="minutes">Menit</option>
+                <option value="hours">Jam</option>
+              </select>
+            </div>
+
+            <button id="autoDeleteToggle" type="button">Mulai</button>
+            <div id="autoDeleteScheduleList">Tidak ada jadwal aktif.</div>
+          </div>
+        </details>
+
+        <div id="domainSummary"></div>
+
+        <div class="actions">
+          <label>
+            <input id="selectAll" type="checkbox">
+            Pilih semua
+          </label>
+          <span id="selectedCount">0 dipilih</span>
+        </div>
+
+        <div class="button-row three">
+          <button id="resetFilters" class="btn-ghost" type="button">Reset</button>
+          <button id="openOptions" class="btn-ghost" type="button">Options</button>
+          <button id="deleteSelected" type="button">Hapus Terpilih</button>
+        </div>
+
+        <p id="status">Masukkan kata kunci atau domain untuk mencari history.</p>
+        <ul id="results"></ul>
+      </section>
+
+      <section id="downloadsView" class="view" hidden>
+        <h2>Download History</h2>
+        <p id="downloadsStatus">Memuat data download...</p>
+        <ul id="downloadsResults"></ul>
+        <div class="button-row">
+          <button id="clearAllDownloads" type="button">Hapus Semua</button>
+        </div>
+      </section>
+
+      <section id="siteDataView" class="view" hidden>
+        <h2>Cookies & Site Data</h2>
+        <p id="cookiesStatus">Memuat data cookie...</p>
+        <ul id="cookiesResults"></ul>
+        <div class="button-row">
+          <button id="clearAllCookies" type="button">Hapus Semua</button>
+        </div>
+      </section>
+
+      <section id="activityView" class="view" hidden>
+        <h2>Aktivitas</h2>
+        <p id="activityStatus">Log berisi data yang telah dihapus dan otomatis dikosongkan saat browser ditutup.</p>
+        <div class="stat-chips">
+          <div class="chip">
+            <span class="chip-num" id="statTotal">0</span>
+            <span class="chip-label">Total</span>
+          </div>
+          <div class="chip">
+            <span class="chip-num" id="statHistory">0</span>
+            <span class="chip-label">History</span>
+          </div>
+          <div class="chip">
+            <span class="chip-num" id="statCookies">0</span>
+            <span class="chip-label">Cookies</span>
+          </div>
+          <div class="chip">
+            <span class="chip-num" id="statDownloads">0</span>
+            <span class="chip-label">Downloads</span>
+          </div>
+        </div>
+
+        <div id="confirmClear" class="confirm-clear" hidden>
+          <p class="confirm-title">Hapus seluruh log aktivitas secara permanen?</p>
+          <p id="confirmDetails"></p>
+          <div class="button-row">
+            <button id="cancelClear" class="btn-ghost" type="button">Batalkan</button>
+            <button id="confirmClearBtn" type="button">Ya, Hapus Log</button>
+          </div>
+        </div>
+
+        <ul id="activityList"></ul>
+        <div class="button-row">
+          <button id="clearActivity" class="btn-ghost" type="button">Bersihkan Log</button>
+        </div>
+      </section>
+
+      <section id="optionsView" class="view" hidden>
+        <h2>Options</h2>
+
+        <label for="maxResults">Maksimal hasil yang ditampilkan</label>
+        <input id="maxResults" type="number" min="10" max="1000" step="10">
+
+        <label for="blacklistKeywords">Blacklist keyword</label>
+        <textarea id="blacklistKeywords" rows="5" placeholder="Satu keyword per baris"></textarea>
+
+        <label for="whitelistDomains">Whitelist domain</label>
+        <textarea id="whitelistDomains" rows="5" placeholder="Satu domain per baris"></textarea>
+
+        <label for="rulePresets">Rule preset</label>
+        <textarea id="rulePresets" rows="6" placeholder="keyword | domain | today"></textarea>
+
+        <div class="button-row">
+          <button id="backToSearch" class="btn-ghost" type="button">Kembali</button>
+          <button id="saveOptions" type="button">Simpan</button>
+        </div>
+
+        <p id="optionsStatus"></p>
+      </section>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
